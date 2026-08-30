@@ -1,0 +1,10 @@
+# 忽略常见编辑器、系统和可选 Node.js 工具生成的文件。
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+node_modules/
+npm-debug.log*
+
+# work 目录只存放本地验收用的临时脚本，不进入版本库。
+work/
