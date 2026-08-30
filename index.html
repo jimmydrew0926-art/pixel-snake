@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#13221b">
+  <meta name="description" content="带像素音乐、动态难度和触屏控制的贪吃蛇小游戏。">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="像素贪吃蛇">
+  <title>像素贪吃蛇</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <link rel="icon" href="assets/icon-192.png">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- 第一步：用语义化结构组织标题、计分区、画布和操作按钮。 -->
+  <main class="game-shell" aria-labelledby="game-title">
+    <header class="game-header">
+      <div>
+        <p class="eyebrow">ARCADE / 01</p>
+        <h1 id="game-title">像素贪吃蛇</h1>
+      </div>
+      <div class="header-tools">
+        <!-- 声音按钮用于随时静音，并向读屏软件说明当前状态。 -->
+        <button id="sound-button" class="sound-button" type="button" aria-pressed="true" title="开启或关闭游戏声音">声音 开</button>
+        <div class="scoreboard" aria-live="polite">
+        <div><span>当前得分</span><strong id="score">0</strong></div>
+        <div><span>最高得分</span><strong id="high-score">0</strong></div>
+        <div><span>速度等级</span><strong id="speed-level">1</strong></div>
+        </div>
+      </div>
+    </header>
+
+    <section class="game-stage" aria-label="贪吃蛇游戏区域">
+      <!-- 第二步：Canvas 负责绘制棋盘、蛇和食物。 -->
+      <canvas id="game-canvas" width="600" height="600" tabindex="0">
+        你的浏览器不支持 Canvas，请升级浏览器后再试。
+      </canvas>
+
+      <!-- 第三步：覆盖层显示开始、暂停和结束状态。 -->
+      <div id="overlay" class="overlay">
+        <p id="status-label" class="status-label">准备好了吗？</p>
+        <h2 id="status-title">按方向键开始</h2>
+        <p id="status-detail">场上同时有 4 颗苹果。全部去吃掉，但不要撞到墙壁或自己。</p>
+        <button id="start-button" class="primary-button" type="button">开始游戏</button>
+      </div>
+    </section>
+
+    <!-- 第四步：同时提供键盘提示和移动端方向控制。 -->
+    <footer class="game-footer">
+      <p><kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd> 移动　<kbd>Space</kbd> 暂停</p>
+      <div class="mobile-controls" aria-label="触屏方向控制">
+        <button type="button" data-direction="up" aria-label="向上">↑</button>
+        <button type="button" data-direction="left" aria-label="向左">←</button>
+        <button type="button" data-direction="down" aria-label="向下">↓</button>
+        <button type="button" data-direction="right" aria-label="向右">→</button>
+      </div>
+    </footer>
+  </main>
+
+  <script src="js/game.js"></script>
+  <script>
+    // 支持 PWA 的浏览器会注册离线缓存；本地 file 模式下自动跳过。
+    if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+      navigator.serviceWorker.register("./service-worker.js");
+    }
+  </script>
+</body>
+</html>
