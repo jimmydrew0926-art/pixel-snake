@@ -1,0 +1,132 @@
+/* 第一步：定义一套高对比度街机配色，并统一盒模型。 */
+:root {
+  color-scheme: dark;
+  --ink: #f3f5e8;
+  --muted: #a8b2a7;
+  --panel: #13221b;
+  --panel-deep: #09110d;
+  --grid: #20362b;
+  --snake: #b8f34a;
+  --snake-head: #f3f5e8;
+  --food: #ff5d57;
+  --accent: #ffc857;
+  --line: #355343;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  display: grid;
+  place-items: center;
+  padding: max(24px, env(safe-area-inset-top)) max(24px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(24px, env(safe-area-inset-left));
+  overflow-x: hidden;
+  background:
+    linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px),
+    #09110d;
+  background-size: 32px 32px;
+  color: var(--ink);
+  font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+}
+
+/* 第二步：限制游戏宽度，让棋盘在桌面端和手机端都保持正方形。 */
+.game-shell { width: min(100%, 720px); }
+
+.game-header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 18px;
+}
+
+.eyebrow {
+  margin: 0 0 6px;
+  color: var(--accent);
+  font: 700 12px/1 "Consolas", monospace;
+}
+
+h1 { margin: 0; font-size: clamp(28px, 6vw, 54px); line-height: 1; letter-spacing: 0; }
+
+.scoreboard { display: flex; gap: 24px; text-align: right; }
+.scoreboard div { min-width: 68px; }
+.scoreboard span { display: block; color: var(--muted); font-size: 12px; }
+.scoreboard strong { display: block; color: var(--snake); font: 700 28px/1.2 "Consolas", monospace; }
+.header-tools { display: flex; align-items: center; gap: 18px; }
+.sound-button { min-width: 72px; min-height: 38px; padding: 0 10px; color: var(--accent); font-size: 13px; }
+
+/* 第三步：棋盘是页面的视觉中心，覆盖层用于呈现游戏状态。 */
+.game-stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  border: 2px solid var(--line);
+  box-shadow: 10px 10px 0 #000;
+  background: var(--panel-deep);
+}
+
+canvas { display: block; width: 100%; height: 100%; outline: none; image-rendering: pixelated; touch-action: none; }
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 28px;
+  text-align: center;
+  background: rgba(9, 17, 13, .88);
+  transition: opacity .2s ease;
+}
+
+.overlay.hidden { opacity: 0; pointer-events: none; }
+.status-label { margin: 0 0 8px; color: var(--food); font: 700 12px/1 "Consolas", monospace; text-transform: uppercase; }
+.overlay h2 { margin: 0; font-size: clamp(24px, 6vw, 46px); letter-spacing: 0; }
+.overlay p:not(.status-label) { max-width: 440px; margin: 12px 0 24px; color: var(--muted); }
+
+button {
+  min-width: 48px;
+  min-height: 48px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--panel);
+  color: var(--ink);
+  font: 700 18px/1 "Segoe UI", sans-serif;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+button:hover { border-color: var(--snake); color: var(--snake); }
+button:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.primary-button { padding: 14px 24px; border: 0; background: var(--snake); color: #09110d; }
+.primary-button:hover { background: var(--ink); color: #09110d; }
+
+/* 第四步：页脚在宽屏显示键盘提示，在触屏设备显示方向按钮。 */
+.game-footer { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-top: 18px; color: var(--muted); }
+.game-footer p { margin: 0; font-size: 13px; }
+kbd { display: inline-block; min-width: 24px; margin-right: 3px; padding: 4px 6px; border: 1px solid var(--line); border-bottom-width: 3px; border-radius: 3px; color: var(--ink); font-family: inherit; text-align: center; }
+.mobile-controls { display: none; grid-template-columns: repeat(3, 48px); grid-template-rows: repeat(2, 48px); gap: 6px; }
+.mobile-controls [data-direction="up"] { grid-column: 2; }
+.mobile-controls [data-direction="left"] { grid-column: 1; grid-row: 2; }
+.mobile-controls [data-direction="down"] { grid-column: 2; grid-row: 2; }
+.mobile-controls [data-direction="right"] { grid-column: 3; grid-row: 2; }
+
+@media (max-width: 620px) {
+  body {
+    align-content: start;
+    padding: max(18px, env(safe-area-inset-top)) max(14px, env(safe-area-inset-right)) max(18px, env(safe-area-inset-bottom)) max(14px, env(safe-area-inset-left));
+  }
+  .game-header { align-items: center; gap: 12px; }
+  .header-tools { gap: 8px; }
+  .sound-button { min-width: 62px; padding: 0 7px; font-size: 12px; }
+  .scoreboard { gap: 10px; }
+  .scoreboard div { min-width: 48px; }
+  .scoreboard strong { font-size: 22px; }
+  .game-stage { box-shadow: 6px 6px 0 #000; }
+  .game-footer { justify-content: center; }
+  .game-footer p { display: none; }
+  .mobile-controls { display: grid; }
+}
